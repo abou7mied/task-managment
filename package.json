@@ -1,0 +1,28 @@
+{
+  "name": "tasks-project",
+  "version": "1.0.0",
+  "description": "A sample project for managing and assigning tasks to users in a project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^8.0.8",
+    "dotenv": "^8.2.0",
+    "inversify": "^5.0.1",
+    "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^5.21.5",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.1.0",
+    "nock": "^12.0.2",
+    "nodemon": "^2.0.2"
+  }
+}
