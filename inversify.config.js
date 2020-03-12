@@ -5,7 +5,7 @@ const Database = require('./src/Database');
 const {TYPES} = require('./src/common');
 
 const container = new Container();
-const sequelize = new Sequelize('sqlite::memory:');
+const sequelize = new Sequelize(process.env.POSTGRES_URL);
 
 container.bind(TYPES.Sequelize)
   .toConstantValue(sequelize);

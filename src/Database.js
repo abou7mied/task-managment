@@ -10,7 +10,7 @@ class Database {
     this.sequelize = sequelize;
   }
 
-  sync() {
+  connect() {
     const models = [
       UsersModel,
       ProjectsModel,

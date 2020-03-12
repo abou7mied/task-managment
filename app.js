@@ -15,7 +15,7 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 (async () => {
-  await database.sync();
+  await database.connect();
   const {HTTP_PORT} = process.env;
   app.listen(HTTP_PORT, () => {
     console.log(`Server started on port ${HTTP_PORT}`);
