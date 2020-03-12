@@ -10,6 +10,13 @@ function init(container) {
     const {query} = ctx.request;
     ctx.body = await database.findUsers(query);
   });
+
+  router.post('/', async (ctx) => {
+    // TODO: validate params
+    const {body} = ctx.request;
+    ctx.body = await database.createUser(body);
+  });
+
   return router;
 }
 

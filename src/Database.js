@@ -44,6 +44,31 @@ class Database {
     return TasksModel.findAndCountAll(options);
   }
 
+  createUser({name, email, surname}) {
+    return UsersModel.create({
+      name,
+      email,
+      surname,
+    });
+  }
+
+  createProject({name, body, status}) {
+    return ProjectsModel.create({
+      name,
+      body,
+      status,
+    });
+  }
+
+  createTask({name, description, score, status}) {
+    return TasksModel.create({
+      name,
+      description,
+      score,
+      status,
+    });
+  }
+
 }
 
 inversify.decorate(inversify.injectable(), Database);

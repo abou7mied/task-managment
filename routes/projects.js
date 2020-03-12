@@ -10,6 +10,13 @@ function init(container) {
     const {query} = ctx.request;
     ctx.body = await database.findProjects(query);
   });
+
+  router.get('/', async (ctx) => {
+    // TODO: validate params
+    const {body} = ctx.request;
+    ctx.body = await database.createProject(body);
+  });
+
   return router;
 }
 

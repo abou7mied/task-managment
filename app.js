@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const Koa = require('koa');
+const koaBody = require('koa-body');
 const {TYPES} = require('./src/common');
 const {container} = require('./inversify.config');
 const routerFactory = require('./routes');
@@ -9,6 +10,7 @@ const app = new Koa();
 const router = routerFactory(container);
 const database = container.get(TYPES.Database);
 
+app.use(koaBody());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
