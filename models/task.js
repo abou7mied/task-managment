@@ -4,10 +4,22 @@ class Task extends Model {
 
   static init(sequelize) {
     return super.init({
-      name: DataTypes.STRING,
-      description: DataTypes.STRING,
-      score: DataTypes.INTEGER,
-      status: DataTypes.ENUM('active', 'inactive', 'declined', 'completed'),
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      score: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM('active', 'inactive', 'declined', 'completed'),
+        allowNull: false,
+      },
     }, {sequelize, modelName: 'task'})
   }
 

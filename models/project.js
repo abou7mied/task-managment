@@ -4,9 +4,18 @@ class Project extends Model {
 
  static init(sequelize) {
     return super.init({
-      name: DataTypes.STRING,
-      body: DataTypes.TEXT,
-      status: DataTypes.ENUM('active', 'inactive', 'declined', 'completed'),
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      body: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM('active', 'inactive', 'declined', 'completed'),
+        allowNull: false,
+      },
     }, {sequelize, modelName: 'project'})
   }
 
