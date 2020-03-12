@@ -15,8 +15,19 @@ class Database {
       UsersModel,
       ProjectsModel,
       TasksModel,
-    ];
-    models.forEach(model => model.init(this.sequelize));
+    ].map(model => model.init(this.sequelize));
+
+    const [
+      usersModel,
+      projectsModel,
+      tasksModel,
+    ] = models;
+    projectsModel.belongsTo(usersModel, {foreignKey: 'assignerId'});
+    tasksModel.belongsTo(usersModel, {foreignKey: 'assignerId'});
+    tasksModel.belongsTo(projectsModel, {foreignKey: 'projectId'});
+
+    usersModel.belongsToMany(tasksModel, {through: 'taskAssignees'});
+    usersModel.belongsToMany(projectsModel, {through: 'projectAssignees'});
     return this.sequelize.sync();
   }
 
