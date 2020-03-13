@@ -1,62 +1,160 @@
 const inversify = require('inversify');
+const {Op} = require('sequelize');
 const {TYPES} = require('../src/common');
-const UsersModel = require('../models/user');
-const ProjectsModel = require('../models/project');
-const TasksModel = require('../models/task');
+const modelsFactory = require('../models');
+
+function getFilterByClause(filters) {
+  const {
+    assignerName,
+    assignerSurname,
+    assigneeId,
+    assigneeName,
+    assigneeSurname,
+  } = filters;
+  const filterBy = {
+    assigner: {},
+    assignee: {},
+  };
+  if (assignerName) {
+    filterBy.assigner.name = assignerName;
+  }
+  if (assignerSurname) {
+    filterBy.assigner.surname = assignerSurname;
+  }
+  if (assigneeId) {
+    filterBy.assignee.id = assigneeId;
+  }
+  if (assigneeName) {
+    filterBy.assignee.name = assigneeName;
+  }
+  if (assigneeSurname) {
+    filterBy.assignee.surname = assigneeSurname;
+  }
+  return filterBy;
+}
 
 class Database {
-
   constructor(sequelize) {
     this.sequelize = sequelize;
+    this.models = modelsFactory(sequelize);
   }
 
   connect() {
-    const models = [
-      UsersModel,
-      ProjectsModel,
-      TasksModel,
-    ].map(model => model.init(this.sequelize));
-
-    const [
-      usersModel,
-      projectsModel,
-      tasksModel,
-    ] = models;
-    projectsModel.belongsTo(usersModel, {foreignKey: 'assignerId'});
-    tasksModel.belongsTo(usersModel, {foreignKey: 'assignerId'});
-    tasksModel.belongsTo(projectsModel, {foreignKey: 'projectId'});
-
-    usersModel.belongsToMany(tasksModel, {through: 'taskAssignees'});
-    usersModel.belongsToMany(projectsModel, {through: 'projectAssignees'});
     return this.sequelize.sync();
   }
 
   findUsers(filters) {
-    const options = {};
+    const options = {where: {}};
     if (filters) {
-      options.where = filters;
+      const {name, surname} = filters;
+      if (name) {
+        options.where.name = name;
+      }
+      if (surname) {
+        options.where.surname = surname;
+      }
     }
-    return UsersModel.findAndCountAll(options);
+    return this.models.user.findAndCountAll(options);
   }
 
   findProjects(filters) {
-    const options = {};
+    const options = {where: {}};
     if (filters) {
-      options.where = filters;
+      const {
+        name,
+        description,
+        status,
+        score,
+      } = filters;
+      if (name) {
+        options.where.name = name;
+      }
+      if (description) {
+        options.where.body = {
+          [Op.like]: `%${description}%`,
+        };
+      }
+      if (status) {
+        options.where.status = status;
+      }
+      if (score) {
+        options.where.score = {
+          [Op.gte]: score,
+        };
+      }
+      const {assignee: filterByAssignee, assigner: filterByAssigner} = getFilterByClause(filters);
+      if (Object.keys(filterByAssigner).length) {
+        options.include = [{
+          model: this.models.user,
+          where: filterByAssigner,
+          attributes: [],
+        }];
+      }
+      if (Object.keys(filterByAssignee).length) {
+        options.include = [
+          {
+            model: this.models.projectAssignees,
+            required: true,
+            include: [
+              {
+                model: this.models.user,
+                where: filterByAssignee,
+                attributes: [],
+              }
+            ],
+          }
+        ];
+      }
     }
-    return ProjectsModel.findAndCountAll(options);
+    return this.models.project.findAndCountAll(options);
   }
 
   findTasks(filters) {
-    const options = {};
-    if (filters) {
-      options.where = filters;
+    const options = {where: {}};
+    const {
+      name,
+      description,
+      status,
+    } = filters;
+    if (name) {
+      options.where.name = name;
     }
-    return TasksModel.findAndCountAll(options);
+    if (description) {
+      options.where.description = {
+        [Op.like]: `%${description}%`,
+      };
+    }
+    if (status) {
+      options.where.status = status;
+    }
+    const {assignee: filterByAssignee, assigner: filterByAssigner} = getFilterByClause(filters);
+    if (Object.keys(filterByAssigner).length) {
+      options.include = [{
+        model: this.models.user,
+        where: filterByAssigner,
+        attributes: [],
+      }];
+    }
+    if (Object.keys(filterByAssignee).length) {
+      options.include = [
+        {
+          model: this.models.taskAssignees,
+          required: true,
+          include: [
+            {
+              model: this.models.user,
+              where: filterByAssignee,
+              attributes: [],
+            }
+          ],
+        }
+      ];
+    }
+    return this.models.task.findAndCountAll(options);
   }
 
   createUser({name, email, surname}) {
-    return UsersModel.create({
+    return this.models.user.create({
       name,
       email,
       surname,
@@ -64,7 +162,7 @@ class Database {
   }
 
   createProject({name, body, status}) {
-    return ProjectsModel.create({
+    return this.models.project.create({
       name,
       body,
       status,
@@ -72,7 +170,7 @@ class Database {
   }
 
   createTask({name, description, score, status}) {
-    return TasksModel.create({
+    return this.models.task.create({
       name,
       description,
       score,

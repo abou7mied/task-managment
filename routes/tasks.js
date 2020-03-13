@@ -16,8 +16,10 @@ function init(container) {
   router.post('/', async (ctx) => {
     // TODO: validate params
     const {body} = ctx.request;
-    const result = await database.createTask(body);
-    ctx.body = wrapResponseBody(result);
+    const task = await database.createTask(body);
+    ctx.body = wrapResponseBody({
+      task: task.toJSON(),
+    });
   });
 
   return router;
