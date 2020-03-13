@@ -58,7 +58,19 @@ class Database {
   }
 
   findProjects(filters) {
-    const options = {where: {}};
+    const options = {
+      attributes: ['id', 'name', 'body', 'status', [this.sequelize.fn('min', this.sequelize.col('tasks.score')), 'averageScore']],
+      where: {},
+      include: [{
+        attributes: [],
+        model: this.models.task,
+        required: false,
+        where: {
+          status: 'completed',
+        }
+      }],
+      group: ['project.id'],
+    };
     if (filters) {
       const {
         name,
@@ -84,15 +96,14 @@ class Database {
       }
       const {assignee: filterByAssignee, assigner: filterByAssigner} = getFilterByClause(filters);
       if (Object.keys(filterByAssigner).length) {
-        options.include = [{
+        options.include.push({
           model: this.models.user,
           where: filterByAssigner,
           attributes: [],
-        }];
+        });
       }
       if (Object.keys(filterByAssignee).length) {
-        options.include = [
-          {
+        options.include.push({
             model: this.models.projectAssignees,
             required: true,
             include: [
@@ -103,7 +114,9 @@ class Database {
               }
             ],
           }
-        ];
+        );
+        options.group.push('projectAssignees.projectId');
+        options.group.push('projectAssignees.userId');
       }
     }
     return this.models.project.findAndCountAll(options);
