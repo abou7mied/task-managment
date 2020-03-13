@@ -1,4 +1,5 @@
 const {Model, DataTypes} = require('sequelize');
+const {projectStatuses} = require("../src/common");
 
 class Project extends Model {
 
@@ -13,7 +14,7 @@ class Project extends Model {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('active', 'inactive', 'declined', 'completed'),
+        type: DataTypes.ENUM(...projectStatuses),
         allowNull: false,
       },
     }, {sequelize, modelName: 'project'})

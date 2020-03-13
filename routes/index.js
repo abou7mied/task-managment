@@ -23,7 +23,6 @@ function init(container) {
         status: 'error',
         error: err.message,
       };
-      ctx.app.emit('error', err, ctx);
     }
   });
 
