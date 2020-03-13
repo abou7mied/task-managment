@@ -13,7 +13,7 @@ function init(container) {
     ctx.body = wrapResponseBody(result);
   });
 
-  router.get('/', async (ctx) => {
+  router.post('/', async (ctx) => {
     // TODO: validate params
     const {body} = ctx.request;
     const result = await database.createProject(body);
