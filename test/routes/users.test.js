@@ -1,9 +1,14 @@
-const {database, request} = require('../common');
+const {database, request, app} = require('../common');
 
 beforeAll(async () => {
   await database.connect();
   const models = Object.values(database.models);
   await Promise.all(models.map((model) => model.truncate({cascade: true})));
+});
+
+afterAll(async () => {
+  app.close();
+  await database.close();
 });
 
 describe('create user with missing fields', () => {

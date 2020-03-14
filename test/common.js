@@ -12,6 +12,7 @@ const database = container.get(TYPES.Database);
 const sequelize = container.get(TYPES.Sequelize);
 
 module.exports = {
+  app,
   container,
   sequelize,
   database,

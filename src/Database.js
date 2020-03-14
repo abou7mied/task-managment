@@ -43,6 +43,10 @@ class Database {
     return this.sequelize.sync();
   }
 
+  close() {
+    return this.sequelize.close();
+  }
+
   findUsers(filters) {
     const options = {where: {}};
     if (filters) {
