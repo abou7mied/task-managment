@@ -8,7 +8,6 @@ ajv.addKeyword('isNotEmpty', {
     validate.errors = [];
     const isValid = typeof data === 'string' && data.trim() !== '';
     if (!isValid) {
-      console.log('hello');
       validate.errors.push({
         keyword: "isNotEmpty",
         message: "should not be empty",
