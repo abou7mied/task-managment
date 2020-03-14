@@ -1,5 +1,6 @@
 # Task Management Project
-
+[![Build Status](https://travis-ci.org/abou7mied/task-managment.svg?branch=master)](https://travis-ci.org/abou7mied/task-managment)
+[![codecov.io](https://codecov.io/github/abou7mied/task-managment/coverage.svg?branch=master)](https://codecov.io/github/abou7mied/task-managment?branch=master)
 ## Configuration
 There is two env variables:
 
