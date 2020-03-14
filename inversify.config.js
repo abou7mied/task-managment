@@ -5,7 +5,9 @@ const Database = require('./src/Database');
 const {TYPES} = require('./src/common');
 
 const container = new Container();
-const sequelize = new Sequelize(process.env.POSTGRES_URL);
+const sequelize = new Sequelize(process.env.POSTGRES_URL, {
+  logging: false,
+});
 
 container.bind(TYPES.Sequelize)
   .toConstantValue(sequelize);
