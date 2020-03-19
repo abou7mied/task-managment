@@ -4,7 +4,7 @@
   "description": "A sample project for managing and assigning tasks to users in a project",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/jest/bin/jest.js --coverage",
+    "test": "./node_modules/.bin/jest --coverage",
     "dev": "./node_modules/.bin/nodemon server.js",
     "start": "node server.js"
   },
