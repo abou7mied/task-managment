@@ -5,7 +5,8 @@ const Database = require('./src/Database');
 const {TYPES} = require('./src/common');
 
 const container = new Container();
-const sequelize = new Sequelize(process.env.POSTGRES_URL, {
+const postgresUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const sequelize = new Sequelize(postgresUrl, {
   logging: false,
 });
 
